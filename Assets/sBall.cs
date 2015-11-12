@@ -17,7 +17,7 @@ public class sBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Physics.IgnoreCollision(ball.gameObject.GetComponent<Collider>(), boost.gameObject.GetComponent<Collider>());
+
 
     }
 

@@ -17,11 +17,12 @@ public class sPlayer : MonoBehaviour
     public sBoostUp bs;
     public GameObject bBar;
     public sBoost bScript;
-    public float power;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        bBar = GameObject.FindGameObjectWithTag("canvas");
         bScript = bBar.GetComponent<sBoost>();
+
     }
 
     // Update is called once per frame
@@ -49,25 +50,14 @@ public class sPlayer : MonoBehaviour
 
     void movement()
     {
+        speed = acc * Time.deltaTime;
         if (Input.GetKey(KeyCode.Space))
         {
-            speed = acc * Time.deltaTime;
-        }
-        else
-        {
-            speed = 0;
-        }
-
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-      
-            //rb.AddForce(speed, 0, 0, ForceMode.Force);
-            //rb.AddForce(Vector3.forward* speed);
             transform.Translate(Vector3.left * speed);
-
         }
 
-        if (Input.GetKey(KeyCode.DownArrow))
+
+        if (Input.GetKey(KeyCode.S))
         {
 
             transform.Translate(Vector3.right * speed);
@@ -77,15 +67,7 @@ public class sPlayer : MonoBehaviour
 
     void OnCollisionEnter(Collision  col)
     {
-        if (col.gameObject.tag == "Boost")
-        {
-
-            if (bScript.getCurrentBoost() < 100)
-            {
-                Destroy(col.gameObject);
-                bScript.increaseBoost(power);
-            }
-        }
+    
         if (col.gameObject.tag == "ball")
         {
             col.gameObject.GetComponent<Rigidbody>().AddForce(dir * push,ForceMode.Force);

@@ -2,25 +2,33 @@
 using System.Collections;
 
 public class sBoostUp : MonoBehaviour {
-    public GameObject boostbar;
-    public sBoost boost;
+    public GameObject bBar;
+    public sBoost bScript;
     public float power;
-    float current=5;
+    float current;
 	// Use this for initialization
 	void Start () {
-        boostbar = GameObject.FindGameObjectWithTag("canvas");
-    boost = boostbar.GetComponent<sBoost>();
+        bBar = GameObject.FindGameObjectWithTag("canvas");
+        bScript = bBar.GetComponent<sBoost>();
         power = 15;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        current = boost.getCurrentBoost();
+        current = bScript.getCurrentBoost();
 	}
 
-    public void checkDestroy()
+ void OnTriggerEnter (Collider col)
     {
-   
+        if (col.gameObject.name == "Player")
+        {
+
+            if (bScript.getCurrentBoost() < 100)
+            {
+                Destroy(this.gameObject);
+                bScript.increaseBoost(power);
+            }
+        }
     }
 
    
