@@ -9,7 +9,7 @@ public class sPowerup : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
-        up = 5;
+        up = 4;
         Instantiate(boost, transform.position + new Vector3(0,up,0), Quaternion.identity);
         exit = false;
 	}
@@ -25,9 +25,10 @@ public class sPowerup : MonoBehaviour {
 
     void reInstantiate()
     {
-        if(timeElapse > 3.0f)
+        if(timeElapse > 7.0f)
         {
             Instantiate(boost, transform.position + new Vector3(0, up, 0), Quaternion.identity);
+            exit = false;
         }
     }
 

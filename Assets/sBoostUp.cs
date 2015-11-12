@@ -5,10 +5,10 @@ public class sBoostUp : MonoBehaviour {
     public GameObject boostbar;
     public sBoost boost;
     public float power;
-    float current;
+    float current=5;
 	// Use this for initialization
 	void Start () {
-        boostbar = GameObject.Find("Canvas");
+        boostbar = GameObject.FindGameObjectWithTag("canvas");
     boost = boostbar.GetComponent<sBoost>();
         power = 15;
     }
@@ -18,16 +18,12 @@ public class sBoostUp : MonoBehaviour {
         current = boost.getCurrentBoost();
 	}
 
-    
-
-    void OnTriggerEnter(Collider other)
+    public void checkDestroy()
     {
-        if (current < 100)
-        {
-            boost.increaseBoost(power);
-            Destroy(this);
-        }
+   
     }
+
+   
 
 }
 
