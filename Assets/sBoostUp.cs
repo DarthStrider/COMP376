@@ -11,6 +11,7 @@ public class sBoostUp : MonoBehaviour {
         bBar = GameObject.FindGameObjectWithTag("canvas");
         bScript = bBar.GetComponent<sBoost>();
         power = 15;
+        current = 0;
     }
 	
 	// Update is called once per frame

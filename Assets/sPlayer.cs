@@ -10,29 +10,39 @@ public class sPlayer : MonoBehaviour
     public float rotationSpeed;
     float translation;
     float rotation;
+    Vector3 lastPosition;
     public Rigidbody rb;
     public float push;
     Vector3 dir;
+    public GameObject car;
     public GameObject b;
     public sBoostUp bs;
     public GameObject bBar;
     public sBoost bScript;
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
+    public float boosting;
+    float increaseSpeed;
+    public float ratio;
+    float boost;
+    float powerInput;
+    float turnInput;
+    float turnSpeed;
+    void Start() { 
+        rb = car.GetComponent<Rigidbody>();
         bBar = GameObject.FindGameObjectWithTag("canvas");
         bScript = bBar.GetComponent<sBoost>();
-
+        increaseSpeed = 1;
+        turnSpeed = 5.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        lastPosition = transform.position;
+        boost = bScript.getCurrentBoost();
         dir.x = Input.GetAxis("Horizontal");
         dir.z = Input.GetAxis("Vertical");
-        // Get the horizontal and vertical axis.
-        // By default they are mapped to the arrow keys.
-        // The value is in the range -1 to 1
+        powerInput = Input.GetAxis("Vertical");
+        turnInput = Input.GetAxis("Horizontal");
         translation = Input.GetAxis("Vertical") * speed;
         rotation = Input.GetAxis("Horizontal") * rotationSpeed;
 
@@ -44,34 +54,59 @@ public class sPlayer : MonoBehaviour
         transform.Translate(0, 0, translation);
         // Rotate around our y-axis
         transform.Rotate(0, rotation, 0);
-
+ 
+        
         movement();
     }
 
     void movement()
     {
+
         speed = acc * Time.deltaTime;
+        if (Input.GetKey(KeyCode.W))
+            rb.AddForce(transform.forward * (speed), ForceMode.Acceleration);
+        if (Input.GetKey(KeyCode.S))
+            rb.AddForce(-(transform.forward) * (speed/2), ForceMode.Acceleration);
+        if (Input.GetKey(KeyCode.D))
+            transform.Rotate(0, 0.5f, 0);
+        if (Input.GetKey(KeyCode.A))
+            transform.Rotate(0, -0.5f, 0);
+
         if (Input.GetKey(KeyCode.Space))
         {
-            transform.Translate(Vector3.left * speed);
+            if (boost > 0)
+            {
+                bScript.decreaseBoost(boosting);
+                rb.AddForce(transform.up * speed, ForceMode.Acceleration);
+                rb.constraints = ~RigidbodyConstraints.FreezePositionY;
+                rb.constraints= RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+
+            }
+        }
+        else
+        {
+            //rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
         }
 
-
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetAxis("Vertical") == 0)
         {
-
-            transform.Translate(Vector3.right * speed);
+            rb.velocity=new Vector3 (0.0f, 0, 0.0f);
         }
     }
 
 
     void OnCollisionEnter(Collision  col)
     {
-    
-        if (col.gameObject.tag == "ball")
+
+        if (col.gameObject.tag == "terrain")
         {
-            col.gameObject.GetComponent<Rigidbody>().AddForce(dir * push,ForceMode.Force);
+            rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
         }
+        if (col.gameObject.tag == "border")
+        {
+            transform.position = lastPosition;
+        }
+
     }
 
 

@@ -4,8 +4,8 @@ using System.Collections;
 public class sBoost : MonoBehaviour
 {
     public float maxBoost = 100;
-    public float currentBoost;
-    public float difference;
+    float currentBoost;
+    float difference;
     public GameObject boostBar;
 
 

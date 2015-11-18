@@ -10,12 +10,13 @@ public class CameraMovement : MonoBehaviour
     Transform focusTarget;
     Vector3 relativePosition;
     Vector3 desiredPosition;
-
+    Vector3 zero = Vector3.zero;
     [SerializeField]
     int maxInterpolations;
 
     void Awake()
     {
+     
         relativePosition = transform.position - focusTarget.position;
     }
 
@@ -34,8 +35,9 @@ public class CameraMovement : MonoBehaviour
 
         // TODO: Smoothly translate the camera over to desired position
 
+        transform.position=Vector3.SmoothDamp(transform.position,desiredPosition, ref zero, smoothness);
 
-		transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothness*Time.deltaTime);
+        //transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothness*Time.deltaTime);
         //       One way of doing it:
         //       - Use Vector3.Lerp to go from "transform.position" to "desiredPosition".
         //       - Use the "smoothness" variable and Time.deltaTime to make it smooth
@@ -44,8 +46,8 @@ public class CameraMovement : MonoBehaviour
         // transform.position = Vector3.Lerp(...)
 
 		Quaternion desiredRotation = Quaternion.LookRotation(-relativePosition);
-		desiredRotation= Quaternion.Lerp(transform.rotation, desiredRotation, Time.deltaTime * smoothness);
-		transform.rotation = desiredRotation;
+		desiredRotation= Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * smoothness);
+        transform.rotation = desiredRotation;
         // TODO: Smoothly rotate camera to look at target
 
         //       One way of doing it:
@@ -58,7 +60,7 @@ public class CameraMovement : MonoBehaviour
         // transform.rotation = Quaternion.Lerp(...)
     }
 
-    List<Vector3> CalculatePositions()
+   List<Vector3> CalculatePositions()
     {
         Vector3 abovePosition = focusTarget.position + Vector3.up * relativePosition.magnitude;
         Vector3 standardPosition = focusTarget.position + relativePosition;
@@ -73,7 +75,7 @@ public class CameraMovement : MonoBehaviour
         camPositions.Add (abovePosition);
 
         return camPositions;
-    }
+    } 
 
     bool CheckLineOfSight(Vector3 position)
     {
